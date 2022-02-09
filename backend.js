@@ -7,7 +7,7 @@ const path = require('path');
 const http = require('http');
 const https = require('https');
 const express = require('express');
-const corrosion = require('corrosion');
+const corrosion = require('./lib');
 const config = require('./config.json');
 const insert = require('./randomization.json');
 const app = express();
@@ -108,6 +108,7 @@ const proxy = new corrosion({
     prefix: config.prefix || '/search/',
     codec: config.codec || 'xor',
     ws: config.ws,
+    forceHttps: true,
     requestMiddleware: [
         corrosion.middleware.blacklist(blacklist, 'Service not allowed due to bot protection! Make sure you are not trying to verify on a proxy.'),
     ],
