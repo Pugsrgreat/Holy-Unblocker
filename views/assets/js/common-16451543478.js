@@ -30,6 +30,31 @@ function setAuthCookie(s, lax) {
     document.cookie = s + "; expires=" + (Date.now() + 259200) + "; SameSite=" + (lax ? "Lax" : "None") + "; domain=." + getDomain() + "; path=/; Secure;";
 }
 
+const sx = 'bing.com' + '/search?q=';
+
+function omnibox(url) {
+    if (url.substring(0, 4) == "http") {
+        return url;
+    } else if (url.includes("." || "")) {
+        return "https://" + url;
+    } else {
+        return "https://" + sx + url;
+    }
+}
+
+const xor = {
+    encode(str) {
+        if (!str) return str;
+        return encodeURIComponent(str.toString().split('').map((char, ind) => ind % 2 ? String.fromCharCode(char.charCodeAt() ^ 2) : char).join(''));
+    },
+    decode(str) {
+        if (!str) return str;
+        let [input, ...search] = str.split('?');
+
+        return decodeURIComponent(input).split('').map((char, ind) => ind % 2 ? String.fromCharCode(char.charCodeAt(0) ^ 2) : char).join('') + (search.length ? '?' + search.join('?') : '');
+    },
+};
+
 /* To use:
  * goProx.proxy(url-string, stealth-boolean-optional)
  *
@@ -39,27 +64,49 @@ function setAuthCookie(s, lax) {
  */
 
 window.goProx = {
-    corrosion: function(url, stealth) {
+    ultraviolet: function(url, stealth) {
         setAuthCookie("__cor_auth=1", true);
-        goToUrl("https://" + getDomain() + "/search/gateway?url=" + url, stealth);
+        goToUrl("https://" + getDomain() + "/service/" + xor.encode(omnibox(url)), stealth);
     },
     womginx: function(url, stealth) {
         setAuthCookie("wgauth=yes", false);
-        goToUrl("https://a." + getDomain() + "/main/" + url, stealth);
+        goToUrl("https://a." + getDomain() + "/main/" + omnibox(url), stealth);
     },
-    invid: function(url, stealth) {
-        setAuthCookie("__cor_auth=1", true);
-        goToUrl("https://client." + getDomain(), stealth);
+    searx: function(stealth) {
+        setAuthCookie("oldsmobile=badcar", true);
+        goToUrl("https://c." + getDomain() + "/engine/", stealth);
     },
     libreddit: function(stealth) {
         setAuthCookie("oldsmobile=badcar", true);
         goToUrl("https://c." + getDomain(), stealth);
     },
+    rnav: function(stealth) {
+        goToUrl("https://client." + getDomain(), stealth);
+    },
     osu: function(stealth) {
         setAuthCookie("osauth=true", false);
         goToUrl("https://osu." + getDomain() + "/index.html", stealth);
     },
-
+    mcnow: function(stealth) {
+        setAuthCookie("__cor_auth=1", false);
+        goToUrl("https://cdn." + getDomain() + "/sw/" + xor.encode('https://now.gg/play/mojang/2534/minecraft-trial'), stealth);
+    },
+    glife: function(stealth) {
+        setAuthCookie("__cor_auth=1", false);
+        goToUrl("https://cdn." + getDomain() + "/sw/" + xor.encode('https://now.gg/play/lunime/5767/gacha-life'), stealth);
+    },
+    roblox: function(stealth) {
+        setAuthCookie("__cor_auth=1", false);
+        goToUrl("https://cdn." + getDomain() + "/sw/" + xor.encode('https://now.gg/play/roblox-corporation/5349/roblox'), stealth);
+    },
+    amongus: function(stealth) {
+        setAuthCookie("__cor_auth=1", false);
+        goToUrl("https://cdn." + getDomain() + "/sw/" + xor.encode('https://now.gg/play/innersloth-llc/4047/among-us'), stealth);
+    },
+    pubg: function(stealth) {
+        setAuthCookie("__cor_auth=1", false);
+        goToUrl("https://cdn." + getDomain() + "/sw/" + xor.encode('https://now.gg/play/proxima-beta/2609/pubg-mobile-resistance'), stealth);
+    },
     train: function(stealth) {
         setAuthCookie("wgauth=yes", false);
         goToUrl("https://a." + getDomain() + "/go/" + ('v6p9' + 'd9t4.ssl.hw' + 'cdn.net/html/1970' + '387/index.ht' + 'ml'), stealth);
